@@ -1,3 +1,5 @@
+import os
+
 import uvicorn
 
 from webhooktester.app import app
@@ -6,7 +8,11 @@ from webhooktester.logging_config import configure_logging
 
 def main() -> None:
     configure_logging()
-    uvicorn.run(app, host="127.0.0.1", port=8000, workers=1, log_config=None)
+
+    host = os.environ.get("WEBHOOK_HOST", "0.0.0.0")
+    port = int(os.environ.get("WEBHOOK_PORT", 8000))
+
+    uvicorn.run(app, host=host, port=port, workers=1, log_config=None)
 
 
 if __name__ == "__main__":

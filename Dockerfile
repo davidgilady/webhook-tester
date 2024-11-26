@@ -51,11 +51,11 @@ RUN . "$VENV_PATH/bin/activate" && "$POETRY_VENV_PATH/bin/poetry" install --only
 
 # install bash-completion
 RUN DEBIAN_FRONTEND=noninteractive apt-get update &&\
-  DEBIAN_FRONTEND=noninteractive apt-get install -y bash-completion
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends bash-completion
 
 # make sure poetry is in path
-RUN mkdir -p $HOME/.local/bin && ln -s $POETRY_VENV_PATH/bin/poetry $HOME/.local/bin/poetry
-RUN "$POETRY_VENV_PATH/bin/poetry" completions bash > $HOME/.poetry_completion.bash &&\
+RUN mkdir -p "$HOME/.local/bin" && ln -s "$POETRY_VENV_PATH/bin/poetry" "$HOME/.local/bin/poetry"
+RUN "$POETRY_VENV_PATH/bin/poetry" completions bash > "$HOME/.poetry_completion.bash" &&\
   echo ". $HOME/.poetry_completion.bash" >> $HOME/.bashrc
 
 # make sure package's python is first in path

@@ -6,6 +6,11 @@ logger = logging.getLogger(__name__)
 app = FastAPI()
 
 
+@app.get("/health-check")
+def read_root():
+    return {"status": "success"}
+
+
 @app.post("/webhook")
 async def webhook(request: Request):
     try:
