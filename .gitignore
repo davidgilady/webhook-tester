@@ -64,3 +64,4 @@ objectdb
 
 # environment file
 .env
+.values.local.yaml
