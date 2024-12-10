@@ -5,9 +5,11 @@ from fastapi import FastAPI, Request
 logger = logging.getLogger(__name__)
 app = FastAPI()
 
+WEBHOOKS = []
+
 
 @app.get("/health-check")
-def read_root():
+def health_check():
     return {"status": "success"}
 
 
@@ -20,4 +22,11 @@ async def webhook(request: Request):
         body = await request.body()
         logger.info("Received webhook: %s. headers: %s", body, request.headers)
 
+    WEBHOOKS.append(body)
+
     return {"status": "success"}
+
+
+@app.get("/webhooks")
+async def get_webhook():
+    return {"hooks": WEBHOOKS}
