@@ -1,5 +1,16 @@
 import json
 import logging
+import os
+
+import colorlog
+
+LOG_COLORS = {
+    "DEBUG": "cyan",
+    "INFO": "green",
+    "WARNING": "yellow",
+    "ERROR": "red",
+    "CRITICAL": "red,bg_white",
+}
 
 
 class JsonFormatter(logging.Formatter):
@@ -18,7 +29,18 @@ class JsonFormatter(logging.Formatter):
 
 
 def configure_logging():
-    logHandler = logging.StreamHandler()
-    formatter = JsonFormatter()
-    logHandler.setFormatter(formatter)
+    json_logging = os.environ.get("JSON_LOGGING", False)
+    if json_logging:
+        logHandler = logging.StreamHandler()
+        formatter = JsonFormatter()
+        logHandler.setFormatter(formatter)
+    else:
+        log_format = (
+            "%(log_color)s%(levelname)-8s%(reset)s[%(cyan)s%(asctime)s%(reset)s] "
+            "%(blue)s%(name)s%(reset)s - %(message)s"
+        )
+        logHandler = colorlog.StreamHandler()
+        formatter = colorlog.ColoredFormatter(log_format, log_colors=LOG_COLORS)
+        logHandler.setFormatter(formatter)
+
     logging.basicConfig(level=logging.INFO, handlers=[logHandler])
